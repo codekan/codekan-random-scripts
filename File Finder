@@ -1,0 +1,48 @@
+# Python-Skript zum Suchen von Dateien auf allen angeschlossenen Speichermedien.
+# Wenn es sich bei dem Dateityp um einen im Skript genannten Typ (hier Zeile 30) handelt, wird jede Zeile einzeln in der Konsole ausgegeben.
+
+
+import os
+import string
+available_drives = ['%s:\\' % d for d in string.ascii_uppercase if os.path.exists('%s:\\' % d)]
+
+all_paths = []
+path_container = []
+
+for drive_path in available_drives:
+    all_paths.append(drive_path)
+    print(drive_path)
+
+# -------------------------------------------------------------------------------------------------------------------
+searched_file = input("What´s the files name?: ")
+
+# r=root, d=directories, f = files - Das ist der Suchablauf, hier setzt du den Festplattenpfad bei drive_path ein
+
+
+def search_process():
+    try:
+        for drive_path in all_paths:  # er zielt auf jede einzelne platte in der all_paths liste
+            for r, d, f in os.walk(drive_path):
+                if searched_file in f:
+                    path_container.append(os.path.join(r, searched_file))
+                    for found_path in path_container:
+                        print("Path of file: " + found_path)
+                        if ".txt" or ".log" or ".ini" or ".docx" in found_path:
+                            file_target = open(found_path, "r")
+                            content_container = file_target.readlines()
+                            for line in content_container:
+                                print(line.strip())
+                        print("---END---")
+                        exit(input("Press enter to exit program. "))
+    except:
+        print("Fehler beim Finden oder Lesen der Datei aufgetreten!")
+            # if os.walk(drive_path) is FileNotFoundError:
+            #   print("Datei konnte nicht auf",str(drive_path), "gefunden werden!")
+
+search_process()
+# Nach einer Funktion immer zwei Zeilen Abstand halten
+
+
+#hier soll der compiler die zweite festplatte durchsuchen wenn er auf der ersten nix findet
+
+exit(input("Press enter to exit program. "))
