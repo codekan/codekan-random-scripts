@@ -1,0 +1,32 @@
+import smtplib
+import os, ssl
+from email.message import EmailMessage
+
+mail_address = "gib mail ein"
+mail_password = "gib pw ein"
+
+target_mail_address = "die mail-adresse zu der du eine mail schickst"
+
+mail_content = EmailMessage()
+
+context = ssl.create_default_context()
+
+with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+    smtp.ehlo()
+    smtp.starttls()
+    smtp.ehlo()
+    try:
+        smtp.login(mail_address, mail_password)
+    except:
+         print("cancer")
+
+    #wenn SMTPAuthenticationError kommt - logindaten falsch oder unsichere apps in gmail nicht erlaubt 
+    subject = "hello - title"
+    body = "how are you doing? - body"
+
+    mail_content = f"Subject: {subject} /n/n {body}"
+
+    smtp.sendmail(mail_address, target_mail_address, mail_content)
+
+    
+
