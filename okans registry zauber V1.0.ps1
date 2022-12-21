@@ -1,9 +1,7 @@
 ﻿#Okans Registry-Zauber
 #Dieses Skript kann eine Liste aus Subpaths nach einem weiteren Subpath durchsuchen, 
 #damit kann man gleichzeitig mehrere Regkeys in verschiedenen Subpaths verändern
-#In diesem Design gibt es aber nur alle gespeicherten Pfade wieder und ob sie existieren
-#Wenn man jetzt bei Test-Path eine ForEach-Schleife bastelt, kann man für jedes $beep (jeden Pfad) eine Handlung festlegen
-#oder nur eine handlung festlegen wenn Test-Path positiv ausfällt, a la [if(Test-Path $beep)]
+#Das ist meine erste Idee mit diesem Skript gewesen aber ist gleichzeitig der Blueprint für größere Registry-Vorhaben
 
 #Test-Path klappt nur wenn man den Reg-Key so angibt: Get-PSDrive ausführen und diese Root Names benutzen wie HKCU:\
 
