@@ -183,6 +183,10 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   admin_username        = var.admin_username
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.windows_nic.id]
+
+  provisioner "local-exec" {
+        command = "powershell -file ./windowsvmsetupmondoo.ps1"
+  }
   
   os_disk {
     caching              = "ReadWrite"
@@ -198,21 +202,6 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
     sku       = "win11-21h2-avd"
     version   = "latest"
   }
-}
-
-resource "azurerm_virtual_machine_extension" "windows_vm_extension" {
-  name                 = "custom-script-extension"
-  virtual_machine_id   = azurerm_windows_virtual_machine.windows_vm.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
-  depends_on           = [azurerm_windows_virtual_machine.windows_vm]
-
-  settings = <<SETTINGS
-  {
-    "scriptPath": "./windowsvmsetupmondoo.ps1"
-  }
-  SETTINGS
 }
 
 resource "azurerm_network_interface" "windows_nic" {
