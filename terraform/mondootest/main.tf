@@ -208,22 +208,24 @@ resource "azurerm_virtual_machine_extension" "windows_vm_extension" {
   type_handler_version = "1.10"
   depends_on           = [azurerm_windows_virtual_machine.windows_vm]
 
-  protected_settings = jsonencode({
-    "commandToExecute" = "powershell -ExecutionPolicy Unrestricted -Command \"${join("\n", [
-      "Set-MpPreference -ScanAvgCPULoadFactor 5",
-      "Set-ExecutionPolicy Unrestricted -Scope Process -Force",
-      "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072",
-      "iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1/cnspec'))",
-      "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12",
-      "iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'))",
-      "Install-Mondoo -RegistrationToken '${var.mondoo_token_windows}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3",
-      "Set-Service -Name mondoo -StartupType Automatic",
-      "Set-Service -Name mondoo -Status Running",
-      "Get-Service mondoo | Select-Object -Property Name, StartType, Status",
-      "New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name \"NeuerOrdner\" -ItemType Directory",
-      "cnspec scan local"
-    ])}\""
-  })
+  settings = <<SETTINGS
+  {
+    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"
+      Set-ExecutionPolicy Unrestricted -Scope Process -Force;
+      Set-MpPreference -ScanAvgCPULoadFactor 5;
+      [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1/cnspec'));
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
+      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
+      Install-Mondoo -RegistrationToken '${var.mondoo_token_windows}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
+      Set-Service -Name mondoo -StartupType Automatic;
+      Set-Service -Name mondoo -Status Running;
+      Get-Service mondoo | Select-Object -Property Name, StartType, Status;
+      New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name \"NeuerOrdner\" -ItemType Directory;
+      cnspec scan local;
+    \""
+  }
+  SETTINGS
 }
 
 resource "azurerm_network_interface" "windows_nic" {
