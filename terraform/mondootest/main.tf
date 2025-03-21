@@ -210,19 +210,19 @@ resource "azurerm_virtual_machine_extension" "windows_vm_extension" {
 
   settings = <<SETTINGS
   {
-    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"
-      Set-ExecutionPolicy Unrestricted -Scope Process -Force;
-      Set-MpPreference -ScanAvgCPULoadFactor 5;
-      [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1/cnspec'));
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
-      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
-      Install-Mondoo -RegistrationToken '${var.mondoo_token_windows}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
-      Set-Service -Name mondoo -StartupType Automatic;
-      Set-Service -Name mondoo -Status Running;
-      Get-Service mondoo | Select-Object -Property Name, StartType, Status;
-      New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name \"NeuerOrdner\" -ItemType Directory;
-      cnspec scan local;
+    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"\n
+      Set-ExecutionPolicy Unrestricted -Scope Process -Force;\n
+      Set-MpPreference -ScanAvgCPULoadFactor 5;\n
+      [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;\n
+      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1/cnspec'));\n
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;\n
+      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));\n
+      Install-Mondoo -RegistrationToken '${var.mondoo_token_windows}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;\n
+      Set-Service -Name mondoo -StartupType Automatic;\n
+      Set-Service -Name mondoo -Status Running;\n
+      Get-Service mondoo | Select-Object -Property Name, StartType, Status;\n
+      New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name \"NeuerOrdner\" -ItemType Directory;\n
+      cnspec scan local;\n
     \""
   }
   SETTINGS
