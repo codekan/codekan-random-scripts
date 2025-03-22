@@ -184,35 +184,6 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   admin_username        = var.admin_username
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.windows_nic.id]
-
-  
-# EXPERIMENT FILE EXEC
-  provisioner "local-exec" {
-    interpreter = ["Powershell", "-Command"]
-    environment = {
-      MyVar = local.my_var
-    }
-  command = <<EOC
-    write-host "my_var value: $Env:MyVar"
-    New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory
-  EOC
-  }
-  
-  
-  #Inline Commands only
-  provisioner "local-exec" {
-  command = <<EOT
-      New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory
-  EOT
-  interpreter = ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
-  }
-
-
-  # File execution only - File in same directory as main.tf
-  provisioner "local-exec" {
-      command = "windowsvmsetupmondoo.ps1"
-      interpreter = ["pwsh", "-File"]
-  }
   
   os_disk {
     caching              = "ReadWrite"
@@ -229,6 +200,25 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
     version   = "latest"
   }
 }
+
+settings = <<SETTINGS
+  {
+    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"
+      Set-ExecutionPolicy Unrestricted -Scope Process -Force;
+      Set-MpPreference -ScanAvgCPULoadFactor 5;
+      [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1/cnspec'));
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
+      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
+      Install-Mondoo -RegistrationToken '${var.mondoo_token_windows}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
+      Set-Service -Name mondoo -StartupType Automatic;
+      Set-Service -Name mondoo -Status Running;
+      Get-Service mondoo | Select-Object -Property Name, StartType, Status;
+      New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name 'NeuerOrdner' -ItemType Directory;
+      cnspec scan local;
+    \""
+  }
+  SETTINGS
 
 resource "azurerm_network_interface" "windows_nic" {
   name                = "windows-nic"
