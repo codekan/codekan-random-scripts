@@ -185,12 +185,6 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.windows_nic.id]
 
-  #experiment
-  provisioner "remote-exec" {
-  inline = [
-    "New-Item -Path \"C:\\users\\$env:USERNAME\\desktop\\okaaaaan\" -ItemType Directory",
-    "ipconfig"
-    ]
   }
   #Inline Commands only
   provisioner "local-exec" {
