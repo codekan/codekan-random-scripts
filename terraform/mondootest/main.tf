@@ -187,14 +187,16 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     curl -sSL https://install.mondoo.com/sh | bash -s -- -u enable -s enable -t $MONDOO_REGISTRATION_TOKEN
     cnspec scan local
     CUSTOM_DATA
-  base64encode(local.custom_data)
   }
 
-# Encode and pass you script
+# Encode and pass the script from the locals stored as custom_data
 custom_data = base64encode(local.custom_data)
 
-# Windows VM Setup
 
+
+
+
+# Windows VM Setup
 resource "azurerm_windows_virtual_machine" "windows_vm" {
   name                  = "windows-vm"
   resource_group_name   = var.resource_group_name
