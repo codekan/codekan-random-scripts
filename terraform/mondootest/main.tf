@@ -189,7 +189,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   command = <<EOT
       New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory
   EOT
-  interpreter = ["PowerShell.exe", "-Command"]
+  interpreter = ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
   }
   # File execution only - File in same directory as main.tf
   provisioner "local-exec" {
