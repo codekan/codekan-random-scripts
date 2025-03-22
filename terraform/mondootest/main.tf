@@ -159,7 +159,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     sku       = "22_04-lts"
     version   = "latest"
   }
-  user_data = <<EOF
+  user_data = base64encode(<<EOF
     #!/bin/bash
     sudo apt-get update
     sudo apt-get install ufw
@@ -170,7 +170,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     export MONDOO_REGISTRATION_TOKEN="${var.mondoo_token_linux}"
     curl -sSL https://install.mondoo.com/sh | bash -s -- -u enable -s enable -t $MONDOO_REGISTRATION_TOKEN
     cnspec scan local
-  EOF  
+  EOF)  
 }
 
 # Windows VM Setup
