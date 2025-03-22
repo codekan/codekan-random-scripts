@@ -159,7 +159,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     sku       = "22_04-lts"
     version   = "latest"
   }
-  user_data = base64encode(<<EOF
+  user_data = textencodebase64(<<EOF
     #!/bin/bash
     sudo apt-get update
     sudo apt-get install ufw
