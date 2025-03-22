@@ -168,7 +168,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     sudo ufw enable
     apt-get update
     mkdir /tmp/TEEEEEEEEST
-    export MONDOO_REGISTRATION_TOKEN=${var.mondoo_token_linux}
+    export MONDOO_REGISTRATION_TOKEN="${var.mondoo_token_linux}"
     curl -sSL https://install.mondoo.com/sh | bash -s -- -u enable -s enable -t $MONDOO_REGISTRATION_TOKEN
     cnspec scan local
   EOF
