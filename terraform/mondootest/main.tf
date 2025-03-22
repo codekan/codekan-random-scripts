@@ -152,7 +152,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-
+  # VM auswählbar: az vm image list --offer UbuntuServer --output table --all
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
