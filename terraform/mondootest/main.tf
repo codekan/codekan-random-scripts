@@ -187,7 +187,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   #experiment
   provisioner "remote-exec" {
   inline = [
-    "New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory",
+    "New-Item -Path "C:\\users\\$env:USERNAME\\desktop\\okaaaaan" -ItemType Directory",
     "ipconfig"
     ]
   }
