@@ -201,7 +201,14 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   }
 }
 
-settings = <<SETTINGS
+resource "azurerm_virtual_machine_extension" "run_commands" {
+  name                 = "inline-commands"
+  virtual_machine_id   = azurerm_windows_virtual_machine.example.id
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.10"
+
+  settings = <<SETTINGS
   {
     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"
       Set-ExecutionPolicy Unrestricted -Scope Process -Force;
@@ -215,10 +222,11 @@ settings = <<SETTINGS
       Set-Service -Name mondoo -Status Running;
       Get-Service mondoo | Select-Object -Property Name, StartType, Status;
       New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name 'NeuerOrdner' -ItemType Directory;
-      cnspec scan local;
+      cnspec scan local
     \""
   }
   SETTINGS
+}
 
 resource "azurerm_network_interface" "windows_nic" {
   name                = "windows-nic"
