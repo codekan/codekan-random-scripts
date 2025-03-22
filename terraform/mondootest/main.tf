@@ -130,23 +130,7 @@ resource "azurerm_subnet_network_security_group_association" "vm_nsg_association
 
 
 
-# Linux VM Setup
-
-#EXPERIMENTELLE COMMANDS UND EXECUTION
-variable "linux_shell_commands" {
-  default = <<-EOT
-    #!/bin/bash
-    sudo apt-get update -y
-    sudo apt-get install -y ufw 
-    sudo ufw default allow outgoing
-    sudo ufw allow from 168.0.0.0/24 to any port 3389 proto tcp
-    sudo ufw enable
-    mkdir /tmp/TEEEEEEEEST
-    export MONDOO_REGISTRATION_TOKEN="${var.mondoo_token_linux}"
-    curl -sSL https://install.mondoo.com/sh | bash -s -- -u enable -s enable -t $MONDOO_REGISTRATION_TOKEN
-    cnspec scan local  
-  EOT
-  }
+# Linux VM + NIC Setup
 
 resource "azurerm_network_interface" "linux_nic" {
   name                = "linux-nic"
@@ -194,13 +178,6 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     cnspec scan local
   EOF
   )
-
-  settings = <<SETTINGS
-  {
-  "commandToExecute": "bash -c '${var.linux_shell_commands}'"
-  }
-  SETTINGS
-  }
 }
 
 
