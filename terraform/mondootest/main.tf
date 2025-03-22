@@ -220,7 +220,7 @@ locals {
 
 resource "azurerm_virtual_machine_extension" "run_commands" {
   name                 = "inline-commands"
-  virtual_machine_id   = azurerm_windows_virtual_machine.example.id
+  virtual_machine_id   = azurerm_windows_virtual_machine.windows_vm.id
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
