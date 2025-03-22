@@ -39,7 +39,7 @@ variable "mondoo_token_linux"{
 
 
 
-# Resource group + vNet bauen
+# Resource group bauen
 # Zusätzlich in Terraform NetworkwatcherRG und den Watcher darin hier definieren
 # Sonst wird der beim Deployment automatisch von Azure erstellt und dann nicht abgerissen
 resource "azurerm_resource_group" "example" {
@@ -95,6 +95,7 @@ resource "azurerm_bastion_host" "bastion" {
   resource_group_name = azurerm_resource_group.example.name
   virtual_network_id  = azurerm_virtual_network.main_vnet.id
   sku                 = "Developer"
+  depends_on          = [azurerm_virtual_network.main_vnet]
 }
 
 # NSG für Bastion
