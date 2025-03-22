@@ -171,8 +171,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     curl -sSL https://install.mondoo.com/sh | bash -s -- -u enable -s enable -t $MONDOO_REGISTRATION_TOKEN
     cnspec scan local
   EOF
-  )  
-}
+  )
+
   #EXPERIMENTELLE COMMANDS
   locals {
     custom_data = <<CUSTOM_DATA
@@ -189,8 +189,10 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     CUSTOM_DATA
   }
 
-# Encode and pass the script from the locals stored as custom_data
-custom_data = base64encode(local.custom_data)
+  # Encode and pass the script from the locals stored as custom_data
+  custom_data = base64encode(local.custom_data)
+}
+
 
 
 
