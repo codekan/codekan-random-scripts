@@ -192,10 +192,10 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
     environment = {
       MyVar = local.my_var
     }
-    command = <<EOC
-      write-host "my_var value: $Env:MyVar"
-      New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory
-    EOC
+  command = <<EOC
+    write-host "my_var value: $Env:MyVar"
+    New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory
+  EOC
   }
   
   #Inline Commands only
@@ -209,7 +209,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   # File execution only - File in same directory as main.tf
   provisioner "local-exec" {
       command = "windowsvmsetupmondoo.ps1"
-  interpreter = ["pwsh", "-File"]
+      interpreter = ["pwsh", "-File"]
   }
   
   os_disk {
