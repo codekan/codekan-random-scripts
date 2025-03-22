@@ -201,32 +201,38 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   }
 }
 
+#Reference powershell commands and execute
+
+locals {
+  ps1_line1 = "Set-ExecutionPolicy Unrestricted -Scope Process -Force"
+  ps1_line2 = "Set-MpPreference -ScanAvgCPULoadFactor 5"
+  ps1_line3 = "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072"
+  ps1_line4 = "iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1/cnspec'))"
+  ps1_line5 = "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12"
+  ps1_line6 = "iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'))"
+  ps1_line7 = "Install-Mondoo -RegistrationToken '${var.mondoo_token_windows}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3"
+  ps1_line8 = "Set-Service -Name mondoo -StartupType Automatic"
+  ps1_line9 = "Set-Service -Name mondoo -Status Running"
+  ps1_line10 = "Get-Service mondoo | Select-Object -Property Name, StartType, Status"
+  ps1_line11 = "New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name 'NeuerOrdner' -ItemType Directory"
+  ps1_line12 = "cnspec scan local"
+}
+
 resource "azurerm_virtual_machine_extension" "run_commands" {
   name                 = "inline-commands"
-  virtual_machine_id   = azurerm_windows_virtual_machine.windows_vm.id
+  virtual_machine_id   = azurerm_windows_virtual_machine.example.id
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
 
   settings = <<SETTINGS
   {
-    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"
-      Set-ExecutionPolicy Unrestricted -Scope Process -Force;
-      Set-MpPreference -ScanAvgCPULoadFactor 5;
-      [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1/cnspec'));
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
-      iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
-      Install-Mondoo -RegistrationToken '${var.mondoo_token_windows}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
-      Set-Service -Name mondoo -StartupType Automatic;
-      Set-Service -Name mondoo -Status Running;
-      Get-Service mondoo | Select-Object -Property Name, StartType, Status;
-      New-Item -Path ([System.Environment]::GetFolderPath('Desktop')) -Name 'NeuerOrdner' -ItemType Directory;
-      cnspec scan local
-    \""
+    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"${local.ps1_line1}; ${local.ps1_line2}; ${local.ps1_line3}; ${local.ps1_line4}; ${local.ps1_line5}; ${local.ps1_line6}; ${local.ps1_line7}; ${local.ps1_line8}; ${local.ps1_line9}; ${local.ps1_line10}; ${local.ps1_line11}; ${local.ps1_line12}; exit 0\""
   }
   SETTINGS
 }
+
+# Windows NIC + IP Configuration
 
 resource "azurerm_network_interface" "windows_nic" {
   name                = "windows-nic"
