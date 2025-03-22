@@ -185,7 +185,11 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   network_interface_ids = [azurerm_network_interface.windows_nic.id]
 
   provisioner "local-exec" {
-        command = "powershell -file ./windowsvmsetupmondoo.ps1"
+  command = <<EOT
+      .\windowsvmsetupmondoo.ps1
+      New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory
+  EOT
+  interpreter = ["PowerShell", "-Command"]
   }
   
   os_disk {
