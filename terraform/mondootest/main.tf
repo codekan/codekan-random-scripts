@@ -194,10 +194,9 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   "commandToExecute": "bash -c '${var.linux_shell_commands}'"
   }
   SETTINGS
-
   }
 }
-
+}
 
 
 
