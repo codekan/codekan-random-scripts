@@ -185,8 +185,8 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.windows_nic.id]
 
-  }
-  # EXPERIMENT FILE EXEC
+  
+# EXPERIMENT FILE EXEC
   provisioner "local-exec" {
     interpreter = ["Powershell", "-Command"]
     environment = {
@@ -198,6 +198,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   EOC
   }
   
+  
   #Inline Commands only
   provisioner "local-exec" {
   command = <<EOT
@@ -205,6 +206,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   EOT
   interpreter = ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
   }
+
 
   # File execution only - File in same directory as main.tf
   provisioner "local-exec" {
