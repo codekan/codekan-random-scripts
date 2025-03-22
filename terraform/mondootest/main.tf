@@ -184,12 +184,17 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.windows_nic.id]
 
+  #Inline Commands only
   provisioner "local-exec" {
   command = <<EOT
-      .\windowsvmsetupmondoo.ps1
       New-Item -Path "C:\users\$env:USERNAME\desktop\okaaaaan" -ItemType Directory
   EOT
   interpreter = ["PowerShell", "-Command"]
+  }
+  # File execution only - File in same directory as main.tf
+  provisioner "local-exec" {
+      command = "windowsvmsetupmondoo.ps1"
+  interpreter = ["PowerShell", "-File"]
   }
   
   os_disk {
