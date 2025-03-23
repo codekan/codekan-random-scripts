@@ -165,7 +165,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     sku       = "22_04-lts"
     version   = "latest"
   }
-  user_data = <<-EOF
+  user_data = filebase64(<<-EOF
     #!/bin/bash
     sudo apt-get update -y
     sudo apt-get install -y ufw 
@@ -177,6 +177,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     curl -sSL https://install.mondoo.com/sh | bash -s -- -u enable -s enable -t $MONDOO_REGISTRATION_TOKEN
     cnspec scan local
   EOF
+  )
 }
 
 
