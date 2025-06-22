@@ -1,4 +1,9 @@
 #!/bin/bash
+
+
+# yq needs to be installed in the Azure Cloud Shell for removing stuff
+# sudo apt-get update && sudo apt-get install -y yq
+
 set -e
 
 echo "🧹 Starte automatisches Cleanup aller Kubernetes-Ressourcen aus YAML-Dateien im aktuellen Verzeichnis..."
